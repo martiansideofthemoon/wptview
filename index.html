@@ -5,10 +5,11 @@
 
 <h1>Web Platform Tests Viewer</h1>
 <div id="wptview" ng-app="wptview" ng-controller="wptviewController" ng-cloak>
+  <div ng-click="errorPanel.visible = false">
   <span us-spinner="{radius: 20, length: 15}" spinner-on="busy"/>
 
   <section>
-    <h2>Log Files</h2>
+    <h2 ng-click="errorPanel.visible = false" >Log Files</h2>
     <p ng-if="runs === null">
       Loading...
     </p>
@@ -43,6 +44,7 @@
         </div>
         <div class="import" ng-hide="!showImport">
           <form name="fileInput" novalidate>
+            <input type="radio" ng-model="upload.logSrc" value="list">Load List</input><br>
             <input type="radio" ng-model="upload.logSrc" value="file">Upload File</input><br>
               <input name="logfile" type="file" id="log_file" custom-on-change="newFile" value="Select File" ng-disabled="busy || upload.logSrc =! 'file'"><br>
             <input type="radio" ng-model="upload.logSrc" value="url">Fetch from URL</input><br>
@@ -136,7 +138,7 @@
         <td>{{ result.test }}</td>
         <td>{{ result.subtest }}</td>
         <td ng-repeat-start="run in result.runs" class="expected {{run.expected}}">{{ run.expected }}</td>
-        <td ng-repeat-end class="result {{run.status}}">{{ run.status }}</td>
+        <td ng-click="loadMessage(run.message); $event.stopPropagation();" ng-repeat-end class="result {{run.status}}">{{ run.status }}</td>
       </tr>
     </table>
     <button ng-if="results !== null" ng-click="fillTable('prev')" ng-disabled="busy || runs === null || runs.length === 0 || resultsView.firstPage">Previous</button>
@@ -145,6 +147,10 @@
   <p>
     {{ warning_message() }}
   </p>
+</div>
+<div ng-if="errorPanel.visible" id="errorPanel">
+  {{ errorPanel.message }}
+</div>
 </div>
 <script src="angular.min.js"></script>
 <script src="angular_scripts.js"></script>

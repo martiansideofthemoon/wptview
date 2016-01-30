@@ -127,6 +127,10 @@ app.controller('wptviewController', function($scope, ResultsModel) {
   $scope.busy = true;
   $scope.runs = null;
   $scope.upload = {};
+  $scope.errorPanel = {
+    "visible": false,
+    "message": ""
+  }
   $scope.resultsView = {
       limit: 50,
       firstPage: true,
@@ -160,6 +164,7 @@ app.controller('wptviewController', function($scope, ResultsModel) {
   updateRuns().then(() => {
     $scope.busy = false;
     $scope.$apply();
+    console.log($scope.runs);
   });
 
   function updateWarnings(duplicates) {
@@ -224,6 +229,13 @@ app.controller('wptviewController', function($scope, ResultsModel) {
       $scope.busy = false;
       $scope.$apply();
     });
+  }
+
+  $scope.loadMessage = function(message) {
+    console.log("load message clicked");
+    $scope.errorPanel.message = message;
+    $scope.errorPanel.visible = true;
+    $scope.$apply();
   }
 
   $scope.export = function() {
